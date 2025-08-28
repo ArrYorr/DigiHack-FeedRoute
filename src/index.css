@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ✅ Reset unwanted Vite styles */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ✅ Body defaults to white + dark text */
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #ffffff;
+  color: #111827; /* Tailwind gray-900 */
+}
+
+/* ✅ Links */
+a {
+  font-weight: 500;
+  color: #2563eb; /* Tailwind blue-600 */
+  text-decoration: none;
+}
+a:hover {
+  color: #1d4ed8; /* Tailwind blue-700 */
+}
+
+/* ✅ Buttons (if you want custom style on top of Tailwind) */
+button {
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+}
