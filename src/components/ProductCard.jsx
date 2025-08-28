@@ -1,42 +1,44 @@
 import { useState } from 'react';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { FiHeart } from 'react-icons/fi';
+import { Link } from 'react-router-dom'; // 1. Import Link
 
 function ProductCard({ product }) {
-  // 1. Add state to track if the item is liked
   const [isLiked, setIsLiked] = useState(false);
 
-  // 2. Create a function to handle the click event
-  const handleLikeClick = () => {
-    setIsLiked(!isLiked); // This toggles the state between true and false
+  const handleLikeClick = (e) => {
+    // Prevent the Link from firing when the like button is clicked
+    e.preventDefault(); 
+    setIsLiked(!isLiked);
   };
 
   return (
-    <div className="relative overflow-hidden rounded-lg shadow-md">
-      <img 
-        src={product.imageUrl} 
-        alt={product.name} 
-        className="w-full h-32 object-cover" 
-      />
-      
-      {/* 3. Make the icon a button and add the onClick handler */}
-      <button 
-        onClick={handleLikeClick}
-        className="absolute top-2 right-2 bg-white/60 p-2 rounded-full focus:outline-none"
-      >
-        {/* 4. Conditionally show a filled or outline heart */}
-        {isLiked ? (
-          <FaHeart className="text-red-500" /> // Liked state
-        ) : (
-          <FaRegHeart className="text-gray-800" /> // Default state
-        )}
-      </button>
+    // 2. Wrap the entire card in a Link component
+    <Link to={`/products/${product.id}`} className="block">
+      <div className="relative overflow-hidden rounded-md shadow-md">
+        
+        <img 
+          src={product.imageUrl} 
+          alt={product.name} 
+          className="w-full h-32 object-cover" 
+        />
+        
+        <button 
+          onClick={handleLikeClick}
+          className="absolute top-2 right-2 bg-black/20 p-1.5 rounded-full"
+        >
+          <FiHeart 
+            className="text-white"
+            style={{ fill: isLiked ? 'red' : 'none', stroke: isLiked ? 'red' : 'white' }}
+          />
+        </button>
 
-      <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/60 to-transparent">
-        <h3 className="text-sm font-bold text-white truncate">{product.name}</h3>
-        <p className="text-xs text-white font-semibold">₦{product.price}</p>
+        <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
+          <h3 className="text-sm font-bold text-white truncate">{product.name}</h3>
+          <p className="text-xs text-white font-semibold">₦{product.price}</p>
+        </div>
+
       </div>
-
-    </div>
+    </Link>
   );
 }
 
