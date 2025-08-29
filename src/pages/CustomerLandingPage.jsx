@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import { FiBell, FiSearch, FiX } from 'react-icons/fi';
 import ProductCard from '../components/ProductCard';
 import BottomNavBar from '../components/BottomNavBar';
-import NotificationPanel from '../components/NotificationPanel';
 
 // --- Mock Data ---
 import cornImg from '../assets/corn.jpg';
@@ -25,29 +24,34 @@ const categories = ['Products', 'Fruits', 'Legumes', 'Tubers', 'Vegetables'];
 
 
 function CustomerLandingPage() {
+  // --- Local State for this page ---
   const [activeTab, setActiveTab] = useState('Products');
   const [filteredProducts, setFilteredProducts] = useState(allProducts);
   const [newPostCount, setNewPostCount] = useState(3);
-  const [notificationCount, setNotificationCount] = useState(3);
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  
+  // --- Shared State from MainLayout ---
+  const { isNotificationsOpen, handleNotificationToggle, notificationCount } = useOutletContext();
 
+  // --- Effects ---
   useEffect(() => {
-    // ... (filtering logic remains the same)
+    if (activeTab === 'Products') {
+      setFilteredProducts(allProducts);
+    } else {
+      const newFilteredProducts = allProducts.filter(
+        (product) => product.category === activeTab
+      );
+      setFilteredProducts(newFilteredProducts);
+    }
   }, [activeTab]);
 
+  // --- Handlers ---
   const handleSeeMore = () => {
-    // ... (see more logic remains the same)
-  };
-
-  const handleNotificationToggle = () => {
-    setIsNotificationsOpen(!isNotificationsOpen);
+    setNewPostCount(prevCount => Math.min(prevCount + 3, allProducts.length));
   };
 
   return (
-    <div className="relative bg-white h-screen flex flex-col">
-      
-      <NotificationPanel isOpen={isNotificationsOpen} />
-
+    <div className="bg-white h-full flex flex-col">
+      {/* Header: Stays fixed at the top */}
       <header className="sticky top-0 bg-white z-10 shadow-sm p-4">
         <div className="flex justify-between items-center mb-4">
           <div>
@@ -73,8 +77,8 @@ function CustomerLandingPage() {
         </div>
       </header>
 
+      {/* Main Content: This is the only section that scrolls */}
       <main className="flex-1 overflow-y-auto overflow-x-hidden pb-24">
-        {/* New Post Section */}
         <div className="mb-6 mt-4">
           <div className="flex justify-between items-center mb-2 px-4">
             <h2 className="text-lg font-bold">New Post</h2>
@@ -84,21 +88,17 @@ function CustomerLandingPage() {
               </button>
             )}
           </div>
-          {/* MODIFIED: Replaced padding with invisible spacer divs for a more stable layout */}
           <div className="flex overflow-x-auto space-x-4 pb-2">
-            {/* Spacer for left padding */}
             <div className="flex-shrink-0 w-4" aria-hidden="true"></div>
             {allProducts.slice(0, newPostCount).map(product => (
               <div key={product.id} className="w-36 flex-shrink-0">
                 <ProductCard product={product} />
               </div>
             ))}
-            {/* Spacer for right padding */}
             <div className="flex-shrink-0 w-4" aria-hidden="true"></div>
           </div>
         </div>
 
-        {/* Category Tabs Section */}
         <div className="px-4 mb-4">
           <div className="flex border-b border-gray-200">
             {categories.map((category) => (
@@ -117,7 +117,6 @@ function CustomerLandingPage() {
           </div>
         </div>
         
-        {/* Product Grid Section */}
         <div className="px-4 grid grid-cols-3 gap-4">
           {filteredProducts.map(product => (
             <ProductCard key={product.id} product={product} />
@@ -125,7 +124,7 @@ function CustomerLandingPage() {
         </div>
       </main>
 
-      <BottomNavBar />
+    
     </div>
   );
 }

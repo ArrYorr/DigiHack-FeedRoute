@@ -1,29 +1,31 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// Layout Component
 import MainLayout from "./components/MainLayout"; 
 
-// Import your pages
+// Page Components
 import WelcomePage from "./pages/WelcomePage";
 import CustomerLogin from "./pages/CustomerLogin";
 import FarmerLogin from "./pages/FarmerLogin";
 import CustomerLandingPage from "./pages/CustomerLandingPage";
-import ProductDetailPage from "./pages/ProductDetailPage"; // 1. Import the new page
+import ProductDetailPage from "./pages/ProductDetailPage";
+import CheckoutPage from "./pages/CheckoutPage"; // Import checkout page
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* --- Public Routes --- */}
+        {/* --- Public Routes (No Nav Bar) --- */}
         <Route path="/" element={<WelcomePage />} />
         <Route path="/customer-login" element={<CustomerLogin />} />
         <Route path="/farmer-login" element={<FarmerLogin />} />
 
-        {/* --- Private Routes with Nav Bar --- */}
+        {/* --- Private Routes (These will have the Bottom Nav Bar) --- */}
         <Route element={<MainLayout />}>
           <Route path="/customer-landing" element={<CustomerLandingPage />} />
-          
-          {/* 2. Add the new dynamic route for product details */}
           <Route path="/products/:productId" element={<ProductDetailPage />} />
-
+          <Route path="/checkout" element={<CheckoutPage />} />
+          {/* You can add routes for Cart, Wallets, etc. here */}
         </Route>
       </Routes>
     </Router>

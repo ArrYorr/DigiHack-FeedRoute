@@ -1,3 +1,5 @@
+// src/components/NotificationPanel.jsx
+
 function NotificationPanel({ isOpen }) {
   // Mock notification data
   const notifications = [
@@ -8,8 +10,8 @@ function NotificationPanel({ isOpen }) {
 
   return (
     <div
-      // MODIFIED: Added `z-30` to lift the panel to the top layer
-      className={`absolute top-20 right-4 w-80 bg-white rounded-lg shadow-xl p-4 transition-all duration-300 ease-in-out z-30
+      // Increased z-index to ensure it's on top of all other content
+      className={`absolute top-20 right-4 w-80 bg-white rounded-lg shadow-xl p-4 transition-all duration-300 ease-in-out z-50
         ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}
     >
       <h3 className="font-bold text-gray-800 mb-2">Notifications</h3>
