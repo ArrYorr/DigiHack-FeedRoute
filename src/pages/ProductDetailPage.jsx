@@ -6,7 +6,7 @@ import { FiBell, FiHeart, FiMapPin, FiPlus, FiMinus, FiX } from 'react-icons/fi'
 import { FaStar } from 'react-icons/fa';
 import ProductCard from '../components/ProductCard';
 
-// --- Mock Data ---
+// --- Mock Data (Acts as a temporary, fake database) ---
 import cornImg from '../assets/corn.jpg';
 import tomatoesImg from '../assets/tomatoes.jpg';
 
@@ -54,6 +54,7 @@ function ProductDetailPage() {
   const { addToCart } = useCart();
   const { isNotificationsOpen, handleNotificationToggle, notificationCount } = useOutletContext();
 
+  // --- State Management ---
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -61,16 +62,21 @@ function ProductDetailPage() {
   const [isLiked, setIsLiked] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
+  // --- Data Fetching Effect ---
   useEffect(() => {
+    console.log("Attempting to find product with ID from URL:", productId);
     const data = productsData[productId];
     if (data) {
+      console.log("Product found:", data);
       setProduct(data);
     } else {
+      console.error("Error: Product not found for ID:", productId);
       setError('Product not found. Please check your mock data.');
     }
     setLoading(false);
   }, [productId]);
 
+  // --- Automatic Slider Effect ---
   useEffect(() => {
     if (product?.gallery?.length > 1) {
       const interval = setInterval(() => {
@@ -80,6 +86,7 @@ function ProductDetailPage() {
     }
   }, [product]);
 
+  // --- Handlers ---
   const incrementQuantity = () => setQuantity(prev => prev + 1);
   const decrementQuantity = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
   const handleLike = () => setIsLiked(!isLiked);
@@ -90,17 +97,24 @@ function ProductDetailPage() {
       alert(`${quantity} x ${product.name} added to cart!`);
     }
   };
-  const handleOrder = () => navigate('/checkout');
 
+  const handleOrder = () => {
+    if (product) {
+      // Pass the current product and quantity directly to the checkout page
+      navigate('/checkout', { state: { orderItems: [{ ...product, quantity }] } });
+    }
+  };
+
+  // --- Render States ---
   if (loading) return <div className="text-center p-10">Loading product...</div>;
   if (error) return <div className="text-center p-10 text-red-500">Error: {error}</div>;
 
   return (
     <div className="bg-white min-h-screen">
+      {/* --- Top Bar --- */}
       <header className="flex justify-between items-center p-4 max-w-4xl mx-auto">
         <button onClick={() => navigate(-1)} className="text-gray-600"><IoIosArrowBack size={24} /></button>
         <h1 className="font-bold text-lg">Product Details</h1>
-        {/* MODIFIED: This button now includes the notification badge */}
         <button onClick={handleNotificationToggle} className="relative text-gray-600 z-20">
           {isNotificationsOpen ? <FiX size={24} /> : <FiBell size={24} />}
           {notificationCount > 0 && (
@@ -111,7 +125,10 @@ function ProductDetailPage() {
         </button>
       </header>
 
+      {/* --- Main Content (Responsive Grid) --- */}
       <div className="max-w-4xl mx-auto md:grid md:grid-cols-2 md:gap-8">
+        
+        {/* --- Left Column (Images) --- */}
         <div className="md:sticky md:top-24 h-fit">
           <div className="relative">
             <img src={product.gallery[activeImageIndex]} alt={product.name} className="w-full h-80 object-cover rounded-lg" />
@@ -137,6 +154,7 @@ function ProductDetailPage() {
           </div>
         </div>
 
+        {/* --- Right Column (Details & Actions) --- */}
         <div className="px-4 pb-24 md:px-0">
           <div className="flex justify-between items-start">
             <div>

@@ -10,7 +10,8 @@ import FarmerLogin from "./pages/FarmerLogin";
 import CustomerLandingPage from "./pages/CustomerLandingPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import CartPage from "./pages/CartPage";
-import CheckoutPage from "./pages/CheckoutPage"; // Import checkout page
+import CheckoutPage from "./pages/CheckoutPage"; 
+// Import checkout page
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/products/:productId" element={<ProductDetailPage />} />
           <Route path="/cart" element={<CartPage />} /> 
           <Route path="/checkout" element={<CheckoutPage />} />
+          
           {/* You can add routes for Cart, Wallets, etc. here */}
         </Route>
       </Routes>
