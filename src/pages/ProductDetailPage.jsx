@@ -52,7 +52,7 @@ function ProductDetailPage() {
   const { productId } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
-  const { isNotificationsOpen, handleNotificationToggle } = useOutletContext();
+  const { isNotificationsOpen, handleNotificationToggle, notificationCount } = useOutletContext();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -61,23 +61,16 @@ function ProductDetailPage() {
   const [isLiked, setIsLiked] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  // --- Simplified Data Fetching Effect for Debugging ---
   useEffect(() => {
-    console.log("Attempting to find product with ID from URL:", productId);
     const data = productsData[productId];
-
     if (data) {
-      console.log("Product found:", data);
       setProduct(data);
     } else {
-      console.error("Error: Product not found for ID:", productId);
       setError('Product not found. Please check your mock data.');
     }
-
-    setLoading(false); // Set loading to false directly
+    setLoading(false);
   }, [productId]);
 
-  // --- Automatic Slider Effect ---
   useEffect(() => {
     if (product?.gallery?.length > 1) {
       const interval = setInterval(() => {
@@ -87,7 +80,6 @@ function ProductDetailPage() {
     }
   }, [product]);
 
-  // --- Handlers ---
   const incrementQuantity = () => setQuantity(prev => prev + 1);
   const decrementQuantity = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
   const handleLike = () => setIsLiked(!isLiked);
@@ -98,10 +90,8 @@ function ProductDetailPage() {
       alert(`${quantity} x ${product.name} added to cart!`);
     }
   };
-
   const handleOrder = () => navigate('/checkout');
 
-  // --- Render States ---
   if (loading) return <div className="text-center p-10">Loading product...</div>;
   if (error) return <div className="text-center p-10 text-red-500">Error: {error}</div>;
 
@@ -110,8 +100,14 @@ function ProductDetailPage() {
       <header className="flex justify-between items-center p-4 max-w-4xl mx-auto">
         <button onClick={() => navigate(-1)} className="text-gray-600"><IoIosArrowBack size={24} /></button>
         <h1 className="font-bold text-lg">Product Details</h1>
+        {/* MODIFIED: This button now includes the notification badge */}
         <button onClick={handleNotificationToggle} className="relative text-gray-600 z-20">
           {isNotificationsOpen ? <FiX size={24} /> : <FiBell size={24} />}
+          {notificationCount > 0 && (
+            <span className="absolute top-0 right-0 block h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center transform translate-x-1/4 -translate-y-1/4">
+              {notificationCount}
+            </span>
+          )}
         </button>
       </header>
 

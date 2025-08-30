@@ -9,6 +9,7 @@ import CustomerLogin from "./pages/CustomerLogin";
 import FarmerLogin from "./pages/FarmerLogin";
 import CustomerLandingPage from "./pages/CustomerLandingPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
+import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage"; // Import checkout page
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/customer-landing" element={<CustomerLandingPage />} />
           <Route path="/products/:productId" element={<ProductDetailPage />} />
+          <Route path="/cart" element={<CartPage />} /> 
           <Route path="/checkout" element={<CheckoutPage />} />
           {/* You can add routes for Cart, Wallets, etc. here */}
         </Route>

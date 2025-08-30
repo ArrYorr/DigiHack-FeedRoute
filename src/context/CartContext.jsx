@@ -1,4 +1,3 @@
-// src/context/CartContext.jsx
 import React, { createContext, useState, useContext } from 'react';
 
 const CartContext = createContext();
@@ -15,17 +14,33 @@ export const CartProvider = ({ children }) => {
         return prevItems.map(item =>
           item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
         );
-      } else {
-        const newItems = [...prevItems, { ...product, quantity }];
-        console.log('Cart updated:', newItems);
-        return newItems;
       }
+      return [...prevItems, { ...product, quantity }];
     });
+  };
+
+  const removeFromCart = (productId) => {
+    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+  };
+
+  const updateItemQuantity = (productId, newQuantity) => {
+    if (newQuantity < 1) {
+      // If quantity drops below 1, remove the item
+      removeFromCart(productId);
+    } else {
+      setCartItems(prevItems =>
+        prevItems.map(item =>
+          item.id === productId ? { ...item, quantity: newQuantity } : item
+        )
+      );
+    }
   };
 
   const value = {
     cartItems,
     addToCart,
+    removeFromCart,
+    updateItemQuantity,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
