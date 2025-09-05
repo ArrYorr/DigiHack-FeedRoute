@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, Link } from 'react-router-dom'; // 1. Import Link
 import { FiBell, FiUpload, FiX } from 'react-icons/fi';
 import ProductCard from '../components/ProductCard';
 import FarmerBottomNavBar from '../components/FarmerBottomNavBar';
@@ -72,10 +72,11 @@ function FarmerLandingPage() {
         {/* See More and Upload Section */}
         <div className="flex justify-between items-center px-4 my-4">
           <a href="#" className="text-sm text-gray-500">see more</a>
-          <button className="flex items-center bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-full">
+          {/* 2. Changed the <button> to a <Link> and added the `to` prop */}
+          <Link to="/farmer-products" className="flex items-center bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-full">
             <FiUpload className="mr-2" size={16} />
             Upload
-          </button>
+          </Link>
         </div>
 
         {/* Category Tabs Section */}
@@ -88,7 +89,6 @@ function FarmerLandingPage() {
                 className={`flex-1 min-w-0 text-center py-2 text-sm font-semibold transition truncate ${
                   activeTab === category
                     ? 'text-green-600 border-b-2 border-green-600'
-                    // MODIFIED: Removed the stray underscore from the line below
                     : 'text-gray-500'
                 }`}
               >

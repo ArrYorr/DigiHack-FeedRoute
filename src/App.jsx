@@ -13,6 +13,9 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import FarmerLandingPage from "./pages/FarmerLandingPage";
+import ProductUploadPage from "./pages/ProductUploadPage";
+import FarmerOrdersPage from "./pages/FarmerOrdersPage";
+import FarmerDeliveryPage from "./pages/FarmerDeliveryPage"; // 1. Import the new delivery page
 
 function App() {
   return (
@@ -34,7 +37,11 @@ function App() {
         {/* --- Farmer Private Routes (Uses FarmerLayout) --- */}
         <Route element={<FarmerLayout />}>
           <Route path="/farmer-dashboard" element={<FarmerLandingPage />} />
-          {/* Add other farmer pages like /farmer-products and /farmer-orders here */}
+          <Route path="/farmer-products" element={<ProductUploadPage />} />
+          <Route path="/farmer-orders/:orderId" element={<FarmerOrdersPage />} />
+          
+          {/* 2. Added the dynamic route for the delivery page */}
+          <Route path="/farmer-delivery/:orderId" element={<FarmerDeliveryPage />} />
         </Route>
       </Routes>
     </Router>
