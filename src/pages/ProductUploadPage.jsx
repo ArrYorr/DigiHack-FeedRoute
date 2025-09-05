@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { IoIosArrowBack } from 'react-icons/io';
 import { FiBell, FiUpload, FiCamera, FiX } from 'react-icons/fi';
 
 function ProductUploadPage() {
-  // We will temporarily remove the connection to the layout's notification
-  // to ensure there are no crashes while we fix the layout.
-  // const { isNotificationsOpen, handleNotificationToggle, notificationCount } = useOutletContext();
   const navigate = useNavigate();
 
   // --- State for the form fields ---
@@ -38,18 +35,25 @@ function ProductUploadPage() {
   };
 
   return (
-    // This is the entire page content. The parent layout will make it scroll.
-    // `pb-24` is added to ensure the final button is not hidden by the bottom nav bar.
     <div className="p-4 pb-24">
       
-      {/* Header (no longer sticky, will scroll with the page) */}
+      {/* MODIFIED: Header structure updated for perfect centering */}
       <div className="flex justify-between items-center mb-6">
-        <button onClick={() => navigate(-1)} className="text-gray-600">
-          <IoIosArrowBack size={24} />
-        </button>
+        {/* Left container (fixed width) */}
+        <div className="w-10">
+          <button onClick={() => navigate(-1)} className="text-gray-600">
+            <IoIosArrowBack size={24} />
+          </button>
+        </div>
+        
+        {/* Title (will now be perfectly centered) */}
         <h1 className="font-bold text-lg">Product</h1>
-        <div className="relative">
-          <FiBell size={24} className="text-gray-600" />
+
+        {/* Right container (same fixed width as the left) */}
+        <div className="w-10 flex justify-end">
+          <div className="relative">
+            <FiBell size={24} className="text-gray-600" />
+          </div>
         </div>
       </div>
       
