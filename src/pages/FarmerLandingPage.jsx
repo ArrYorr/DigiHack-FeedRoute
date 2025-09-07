@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useOutletContext, Link } from 'react-router-dom'; // 1. Import Link
+import { useOutletContext, Link } from 'react-router-dom';
 import { FiBell, FiUpload, FiX } from 'react-icons/fi';
 import ProductCard from '../components/ProductCard';
 import FarmerBottomNavBar from '../components/FarmerBottomNavBar';
@@ -15,7 +15,6 @@ const farmerProducts = [
   { id: 2, name: 'Maize', price: 180, imageUrl: cornImg, category: 'Products' },
   { id: 3, name: 'Carrot', price: 180, imageUrl: carrotsImg, category: 'Tubers' },
   { id: 4, name: 'Onions', price: 180, imageUrl: onionsImg, category: 'Vegetables' },
-  // ...add more of the farmer's products
 ];
 
 const categories = ['Products', 'Fruits', 'Legumes', 'Tubers', 'Vegetables'];
@@ -62,7 +61,8 @@ function FarmerLandingPage() {
             <div className="flex-shrink-0 w-4"></div>
             {farmerProducts.slice(0, 3).map(product => (
               <div key={product.id} className="w-40 flex-shrink-0">
-                <ProductCard product={product} />
+                {/* MODIFIED: Pass the correct basePath to the card */}
+                <ProductCard product={product} basePath="/farmer-products" />
               </div>
             ))}
             <div className="flex-shrink-0 w-4"></div>
@@ -72,7 +72,6 @@ function FarmerLandingPage() {
         {/* See More and Upload Section */}
         <div className="flex justify-between items-center px-4 my-4">
           <a href="#" className="text-sm text-gray-500">see more</a>
-          {/* 2. Changed the <button> to a <Link> and added the `to` prop */}
           <Link to="/farmer-products" className="flex items-center bg-gray-200 text-gray-700 font-semibold px-4 py-2 rounded-full">
             <FiUpload className="mr-2" size={16} />
             Upload
@@ -101,7 +100,8 @@ function FarmerLandingPage() {
         {/* Farmer's Product Grid */}
         <div className="px-4 grid grid-cols-3 gap-4">
           {filteredProducts.map(product => (
-            <ProductCard key={product.id} product={product} />
+            // MODIFIED: Pass the correct basePath to the card here too
+            <ProductCard key={product.id} product={product} basePath="/farmer-products" />
           ))}
         </div>
       </main>

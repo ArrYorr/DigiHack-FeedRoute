@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import { FiHeart } from 'react-icons/fi';
-import { Link } from 'react-router-dom'; // 1. Import Link
+import { Link } from 'react-router-dom';
 
-function ProductCard({ product }) {
+// MODIFIED: The component now accepts a `basePath` prop
+function ProductCard({ product, basePath = "/products" }) {
   const [isLiked, setIsLiked] = useState(false);
 
   const handleLikeClick = (e) => {
-    // Prevent the Link from firing when the like button is clicked
     e.preventDefault(); 
     setIsLiked(!isLiked);
   };
 
   return (
-    // 2. Wrap the entire card in a Link component
-    <Link to={`/products/${product.id}`} className="block">
+    // MODIFIED: The `to` prop now uses the basePath
+    <Link to={`${basePath}/${product.id}`} className="block">
       <div className="relative overflow-hidden rounded-md shadow-md">
         
         <img 

@@ -15,7 +15,8 @@ import CheckoutPage from "./pages/CheckoutPage";
 import FarmerLandingPage from "./pages/FarmerLandingPage";
 import ProductUploadPage from "./pages/ProductUploadPage";
 import FarmerOrdersPage from "./pages/FarmerOrdersPage";
-import FarmerDeliveryPage from "./pages/FarmerDeliveryPage"; // 1. Import the new delivery page
+import FarmerDeliveryPage from "./pages/FarmerDeliveryPage";
+import FarmerProductDetailPage from "./pages/FarmerProductDetailPage.jsx"; // 1. Import the missing page
 
 function App() {
   return (
@@ -39,9 +40,10 @@ function App() {
           <Route path="/farmer-dashboard" element={<FarmerLandingPage />} />
           <Route path="/farmer-products" element={<ProductUploadPage />} />
           <Route path="/farmer-orders/:orderId" element={<FarmerOrdersPage />} />
-          
-          {/* 2. Added the dynamic route for the delivery page */}
           <Route path="/farmer-delivery/:orderId" element={<FarmerDeliveryPage />} />
+
+          {/* 2. Added the dynamic route for the farmer's product detail page */}
+          <Route path="/farmer-products/:productId" element={<FarmerProductDetailPage />} />
         </Route>
       </Routes>
     </Router>
