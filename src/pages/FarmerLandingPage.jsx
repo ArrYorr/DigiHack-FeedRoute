@@ -61,7 +61,7 @@ function FarmerLandingPage() {
             <div className="flex-shrink-0 w-4"></div>
             {farmerProducts.slice(0, 3).map(product => (
               <div key={product.id} className="w-40 flex-shrink-0">
-                {/* MODIFIED: Pass the correct basePath to the card */}
+               
                 <ProductCard product={product} basePath="/farmer-products" />
               </div>
             ))}
@@ -100,7 +100,7 @@ function FarmerLandingPage() {
         {/* Farmer's Product Grid */}
         <div className="px-4 grid grid-cols-3 gap-4">
           {filteredProducts.map(product => (
-            // MODIFIED: Pass the correct basePath to the card here too
+           
             <ProductCard key={product.id} product={product} basePath="/farmer-products" />
           ))}
         </div>

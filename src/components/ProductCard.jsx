@@ -12,7 +12,7 @@ function ProductCard({ product, basePath = "/products" }) {
   };
 
   return (
-    // MODIFIED: The `to` prop now uses the basePath
+    
     <Link to={`${basePath}/${product.id}`} className="block">
       <div className="relative overflow-hidden rounded-md shadow-md">
         

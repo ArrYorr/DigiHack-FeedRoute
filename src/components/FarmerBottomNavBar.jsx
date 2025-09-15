@@ -5,7 +5,7 @@ function FarmerBottomNavBar() {
   const location = useLocation();
   const activePath = location.pathname;
 
-  // This is our sample order ID from the mock data
+  
   const sampleOrderId = 'GRB1234567890';
 
   return (
@@ -22,7 +22,7 @@ function FarmerBottomNavBar() {
           <span className={`text-xs ${activePath.startsWith('/farmer-products') ? 'font-bold' : ''}`}>Products</span>
         </Link>
 
-        {/* MODIFIED: This now links to the specific order detail page */}
+      
         <Link to={`/farmer-orders/${sampleOrderId}`} className={`flex flex-col items-center transition-colors duration-200 ${activePath.startsWith('/farmer-orders') ? 'text-green-600' : 'text-gray-400'}`}>
           <FiClipboard size={24} />
           <span className={`text-xs ${activePath.startsWith('/farmer-orders') ? 'font-bold' : ''}`}>Order</span>

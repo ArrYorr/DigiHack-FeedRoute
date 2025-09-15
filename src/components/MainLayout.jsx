@@ -20,7 +20,7 @@ function MainLayout() {
         <Outlet context={{ isNotificationsOpen, handleNotificationToggle, notificationCount }} />
       </div>
       
-      {/* MODIFIED: The BottomNavBar is now correctly rendered here */}
+      {/* MODIFIED: The BottomNavBar is rendered here */}
       <BottomNavBar />
     </div>
   );

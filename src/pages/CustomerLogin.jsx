@@ -11,7 +11,6 @@ function CustomerLogin() {
     e.preventDefault();
     console.log("Logging in with:", { username, password });
     
-    // MODIFIED: This now navigates to the correct customer page
     navigate('/customer-landing');
   };
 

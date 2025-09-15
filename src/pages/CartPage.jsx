@@ -35,7 +35,7 @@ function CartItem({ item }) {
 function CartPage() {
   const { cartItems } = useCart();
   const navigate = useNavigate();
-  // MODIFIED: Get the shared notification state and handler from the layout
+  
   const { isNotificationsOpen, handleNotificationToggle, notificationCount } = useOutletContext();
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -48,7 +48,7 @@ function CartPage() {
           <IoIosArrowBack size={24} />
         </button>
         <h1 className="font-bold text-lg">Cart</h1>
-        {/* MODIFIED: This button is now fully functional */}
+          {/* Notification Bell with Count */}
         <button onClick={handleNotificationToggle} className="relative z-20">
           {isNotificationsOpen ? <FiX size={24} className="text-gray-600" /> : <FiBell size={24} className="text-gray-600" />}
           {notificationCount > 0 && (

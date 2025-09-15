@@ -10,7 +10,7 @@ function NotificationPanel({ isOpen }) {
 
   return (
     <div
-      // Increased z-index to ensure it's on top of all other content
+    
       className={`absolute top-20 right-4 w-80 bg-white rounded-lg shadow-xl p-4 transition-all duration-300 ease-in-out z-50
         ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}
     >

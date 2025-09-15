@@ -4,11 +4,11 @@ import FarmerBottomNavBar from './FarmerBottomNavBar';
 import NotificationPanel from './NotificationPanel';
 
 function FarmerLayout() {
-  // 1. State for the notification panel is now managed here
+  // 1. State for the notification panel is managed here
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(2); // Example count for farmers
 
-  // 2. The handler to open/close the panel also lives here
+  // 2. The handler to open/close the panel lives here
   const handleNotificationToggle = () => {
     setIsNotificationsOpen(!isNotificationsOpen);
   };

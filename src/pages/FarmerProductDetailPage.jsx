@@ -56,10 +56,10 @@ const farmerProductsData = {
     benefits: ['Adds flavor to any dish.', 'Contains antioxidants.'],
     gallery: [onionsImg, tomatoesImg, cornImg],
   },
-  // This is the data from the screenshot you sent
+  
   'oranges': {
      id: 'oranges', // A unique ID
-     name: 'Maize', // The screenshot text says "Maize"
+     name: 'Maize', 
      poNumber: 'ST133',
      location: 'Ikorodu Lagos, Nigeria',
      rating: 4.75,

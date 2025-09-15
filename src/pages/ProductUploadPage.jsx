@@ -37,19 +37,19 @@ function ProductUploadPage() {
   return (
     <div className="p-4 pb-24">
       
-      {/* MODIFIED: Header structure updated for perfect centering */}
+     
       <div className="flex justify-between items-center mb-6">
-        {/* Left container (fixed width) */}
+        
         <div className="w-10">
           <button onClick={() => navigate(-1)} className="text-gray-600">
             <IoIosArrowBack size={24} />
           </button>
         </div>
         
-        {/* Title (will now be perfectly centered) */}
+        
         <h1 className="font-bold text-lg">Product</h1>
 
-        {/* Right container (same fixed width as the left) */}
+       
         <div className="w-10 flex justify-end">
           <div className="relative">
             <FiBell size={24} className="text-gray-600" />

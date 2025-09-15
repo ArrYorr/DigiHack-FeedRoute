@@ -16,7 +16,7 @@ import FarmerLandingPage from "./pages/FarmerLandingPage";
 import ProductUploadPage from "./pages/ProductUploadPage";
 import FarmerOrdersPage from "./pages/FarmerOrdersPage";
 import FarmerDeliveryPage from "./pages/FarmerDeliveryPage";
-import FarmerProductDetailPage from "./pages/FarmerProductDetailPage.jsx"; // 1. Import the missing page
+import FarmerProductDetailPage from "./pages/FarmerProductDetailPage.jsx"; 
 
 function App() {
   return (

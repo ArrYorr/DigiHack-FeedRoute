@@ -4,7 +4,7 @@ import { IoIosArrowBack } from 'react-icons/io';
 import { FiBell, FiX, FiMapPin, FiChevronDown } from 'react-icons/fi';
 
 // --- Mock Order Data ---
-// In a real app, this data would come from your server
+
 const ordersData = {
   'GRB1234567890': {
     orderCode: 'GRB1234567890',

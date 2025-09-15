@@ -19,18 +19,18 @@ function WelcomePage() {
         {/* Text in the middle (centered vertically) */}
         <div className="flex flex-col items-center justify-center flex-grow text-center">
           <div className="bg-black/40 p-10 rounded-2xl shadow-lg w-full max-w-md">
-            {/* MODIFIED: Added font-roboto class */}
+           
             <h1 className="text-4xl font-bold text-white font-roboto">
               Feed<span className="font-extrabold">Route</span>
             </h1>
-            {/* This <p> tag will automatically use Nunito Sans as the default */}
+          
             <p className="text-sm text-gray-200 mt-2">
               Sell your crops directly, earn more.
             </p>
           </div>
         </div>
 
-        {/* Buttons are positioned relative to the screen padding (`px-6`) */}
+       
         <div className="absolute bottom-10 left-6 right-6 flex flex-col space-y-4">
           <Link
             to="/farmer-login"
