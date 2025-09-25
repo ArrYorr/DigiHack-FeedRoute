@@ -1,4 +1,4 @@
-import { FiHome, FiShoppingCart, FiCreditCard } from 'react-icons/fi';
+import { FiHome, FiShoppingCart, FiUser } from 'react-icons/fi'; // 1. Changed icon import
 import { Link, useLocation } from 'react-router-dom';
 
 function BottomNavBar() {
@@ -19,9 +19,10 @@ function BottomNavBar() {
           <span className={`text-xs ${activePath === '/cart' ? 'font-bold' : ''}`}>Cart</span>
         </Link>
 
-        <Link to="/wallets" className={`flex flex-col items-center transition-colors duration-200 ${activePath === '/wallets' ? 'text-green-600' : 'text-gray-400'}`}>
-          <FiCreditCard size={24} />
-          <span className={`text-xs ${activePath === '/wallets' ? 'font-bold' : ''}`}>Wallets</span>
+        {/* 2. Updated the link, icon, and text for Profile */}
+        <Link to="/profile" className={`flex flex-col items-center transition-colors duration-200 ${activePath === '/profile' ? 'text-green-600' : 'text-gray-400'}`}>
+          <FiUser size={24} />
+          <span className={`text-xs ${activePath === '/profile' ? 'font-bold' : ''}`}>Profile</span>
         </Link>
         
       </div>

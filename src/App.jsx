@@ -12,11 +12,12 @@ import CustomerLandingPage from "./pages/CustomerLandingPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import ProfilePage from "./pages/ProfilePage"; // Import the Profile page
 import FarmerLandingPage from "./pages/FarmerLandingPage";
 import ProductUploadPage from "./pages/ProductUploadPage";
 import FarmerOrdersPage from "./pages/FarmerOrdersPage";
 import FarmerDeliveryPage from "./pages/FarmerDeliveryPage";
-import FarmerProductDetailPage from "./pages/FarmerProductDetailPage.jsx"; 
+import FarmerProductDetailPage from "./pages/FarmerProductDetailPage";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/products/:productId" element={<ProductDetailPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Route>
 
         {/* --- Farmer Private Routes (Uses FarmerLayout) --- */}
@@ -41,8 +43,6 @@ function App() {
           <Route path="/farmer-products" element={<ProductUploadPage />} />
           <Route path="/farmer-orders/:orderId" element={<FarmerOrdersPage />} />
           <Route path="/farmer-delivery/:orderId" element={<FarmerDeliveryPage />} />
-
-          {/* 2. Added the dynamic route for the farmer's product detail page */}
           <Route path="/farmer-products/:productId" element={<FarmerProductDetailPage />} />
         </Route>
       </Routes>
