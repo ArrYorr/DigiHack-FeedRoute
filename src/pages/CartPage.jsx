@@ -1,26 +1,20 @@
 import { useEffect } from 'react';
 import { useOutletContext, Link, useNavigate } from 'react-router-dom';
 import { FiTrash2 } from 'react-icons/fi';
-import { useCart } from '../context/CartContext'; // Assuming you have this
+import { useCart } from '../context/CartContext';
 
 function CartPage() {
   const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, cartTotal } = useCart();
   
-  // 1. GET THE SET TITLE FUNCTION FROM LAYOUT
   const { setCurrentPageTitle } = useOutletContext();
 
-  // 2. SET THE HEADER TITLE ON MOUNT
   useEffect(() => {
     setCurrentPageTitle("My Cart");
   }, [setCurrentPageTitle]);
 
   return (
     <div className="bg-gray-50 min-h-full pb-24 p-4">
-      {/* ❌ DELETE THE <CustomerHeader> or <header> SECTION HERE 
-         The MainLayout is already rendering it for you!
-      */}
-
       {cartItems.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-64 text-center">
           <p className="text-gray-500 mb-4">Your cart is empty</p>
@@ -34,7 +28,7 @@ function CartPage() {
                 <img src={item.imageUrl} alt={item.name} className="w-16 h-16 rounded-lg object-cover" />
                 <div className="flex-1">
                   <h3 className="font-bold text-gray-800">{item.name}</h3>
-                  <p className="text-sm text-green-600 font-semibold">₦{item.price}</p>
+                  <p className="text-sm text-green-600 font-semibold">₦{item.price.toLocaleString()}</p>
                   
                   <div className="flex items-center gap-3 mt-2">
                     <button 
@@ -64,13 +58,13 @@ function CartPage() {
               <span className="text-gray-600">Subtotal</span>
               <span className="font-bold">₦{cartTotal.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between mb-4">
-              <span className="text-gray-600">Delivery</span>
-              <span className="font-bold">₦1,500</span>
-            </div>
+            
+            {/* REMOVED: Delivery Fee Section */}
+            
             <div className="border-t pt-2 flex justify-between text-lg font-bold text-green-800">
               <span>Total</span>
-              <span>₦{(cartTotal + 1500).toLocaleString()}</span>
+              {/* UPDATED: Total is now just the cartTotal */}
+              <span>₦{cartTotal.toLocaleString()}</span>
             </div>
           </div>
 

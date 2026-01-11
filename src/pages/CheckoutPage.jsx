@@ -1,94 +1,95 @@
-import { useState } from 'react';
-import { useNavigate, useLocation, useOutletContext } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useOutletContext, useNavigate, useLocation } from 'react-router-dom';
+import { FiCheckCircle } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
-import { IoIosArrowBack } from 'react-icons/io';
-import { FiBell, FiX } from 'react-icons/fi';
-
-import flutterwaveLogo from '../assets/flutterwave-logo.png';
-import paystackLogo from '../assets/paystack-logo.png';
 
 function CheckoutPage() {
-  const { cartItems } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
-  const { isNotificationsOpen, handleNotificationToggle, notificationCount } = useOutletContext();
+  const { cartItems, cartTotal } = useCart();
   
-  const [selectedGateway, setSelectedGateway] = useState('paystack');
+  // 1. Get the layout function to set the title
+  const { setCurrentPageTitle } = useOutletContext();
+  
+  const [step, setStep] = useState(1); // 1 = Form, 2 = Success
 
-  // Check if we are ordering a specific item directly or the whole cart
-  const itemsToOrder = location.state?.orderItems || cartItems;
-  const total = itemsToOrder.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const orderCode = `GRB${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+  // 2. Set the Global Header Title
+  useEffect(() => {
+    setCurrentPageTitle("Checkout");
+  }, [setCurrentPageTitle]);
 
-  const handlePayment = () => {
-    console.log(`Proceeding to payment with ${selectedGateway} for a total of ₦${total}`);
-    alert(`Initiating payment with ${selectedGateway}...`);
+  const handlePlaceOrder = (e) => {
+    e.preventDefault();
+    // Simulate order processing
+    setTimeout(() => {
+      setStep(2);
+    }, 1000);
   };
 
+  // --- SUCCESS VIEW ---
+  if (step === 2) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full p-6 text-center pb-24">
+        <FiCheckCircle className="text-green-600 w-24 h-24 mb-4" />
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">Order Placed!</h2>
+        <p className="text-gray-500 mb-8">Your order has been successfully placed. You will receive a confirmation soon.</p>
+        <button 
+          onClick={() => navigate('/customer-landing')}
+          className="w-full bg-green-700 text-white font-bold py-4 rounded-xl shadow-md hover:bg-green-800"
+        >
+          Back to Home
+        </button>
+      </div>
+    );
+  }
+
+  // --- FORM VIEW ---
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <header className="flex justify-between items-center p-4 bg-white border-b">
-        <button onClick={() => navigate(-1)} className="text-gray-600">
-          <IoIosArrowBack size={24} />
-        </button>
-        <h1 className="font-bold text-lg">Order</h1>
-        <button onClick={handleNotificationToggle} className="relative text-gray-600 z-20">
-          {isNotificationsOpen ? <FiX size={24} /> : <FiBell size={24} />}
-          {notificationCount > 0 && (
-            <span className="absolute top-0 right-0 block h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center transform translate-x-1/4 -translate-y-1/4">
-              {notificationCount}
-            </span>
-          )}
-        </button>
-      </header>
+    <div className="bg-gray-50 min-h-full pb-24 p-4">
+      {/* ❌ OLD HEADER REMOVED FROM HERE */}
+      
+      <div className="bg-white p-4 rounded-xl shadow-sm mb-6">
+        <h3 className="font-bold text-gray-700 mb-4 border-b pb-2">Order Summary</h3>
+        {cartItems.map((item, index) => (
+          <div key={index} className="flex justify-between py-2 text-sm">
+            <span className="text-gray-600">{item.quantity}x {item.name}</span>
+            <span className="font-semibold">₦{(item.price * item.quantity).toLocaleString()}</span>
+          </div>
+        ))}
+        <div className="border-t mt-2 pt-2 flex justify-between font-bold text-lg text-green-700">
+          <span>Total</span>
+          <span>₦{cartTotal.toLocaleString()}</span>
+        </div>
+      </div>
 
-      <main className="p-4 pb-48">
-        <div className="bg-gray-100 p-4 rounded-lg text-center mb-6">
-          <p className="text-sm text-gray-500">Order code: <span className="text-gray-800 font-medium">{orderCode}</span></p>
-          <p className="text-xs text-gray-400 mt-1">{new Date().toLocaleDateString('en-GB')}</p>
+      <form onSubmit={handlePlaceOrder} className="space-y-4">
+        <div>
+          <label className="block text-gray-700 font-bold mb-2">Delivery Address</label>
+          <textarea 
+            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+            rows="3"
+            placeholder="Enter your full address..."
+            required
+          ></textarea>
         </div>
 
-        <div className="bg-green-100/50 border border-green-200 text-green-800 text-3xl font-bold p-6 rounded-lg text-center mb-6 shadow-sm">
-          ₦{total.toLocaleString()}
+        <div>
+          <label className="block text-gray-700 font-bold mb-2">Phone Number</label>
+          <input 
+            type="tel" 
+            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+            placeholder="080..."
+            required
+          />
         </div>
 
-        <div className="space-y-4">
-          <p className="font-semibold text-gray-700">Please choose your payment gateways</p>
-          <button 
-            onClick={() => setSelectedGateway('flutterwave')}
-            className={`w-full flex items-center justify-between p-4 rounded-lg border-2 transition ${selectedGateway === 'flutterwave' ? 'border-green-500 bg-white' : 'border-gray-200 bg-white'}`}
-          >
-            <div className="flex items-center"><img src={flutterwaveLogo} alt="Flutterwave" className="h-6" /></div>
-            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedGateway === 'flutterwave' ? 'border-green-500' : 'border-gray-300'}`}>
-              {selectedGateway === 'flutterwave' && <div className="w-3 h-3 bg-green-500 rounded-full"></div>}
-            </div>
-          </button>
-          <button 
-            onClick={() => setSelectedGateway('paystack')}
-            className={`w-full flex items-center justify-between p-4 rounded-lg border-2 transition ${selectedGateway === 'paystack' ? 'border-green-500 bg-white' : 'border-gray-200 bg-white'}`}
-          >
-            <div className="flex items-center"><img src={paystackLogo} alt="Paystack" className="h-5" /></div>
-            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedGateway === 'paystack' ? 'border-green-500' : 'border-gray-300'}`}>
-              {selectedGateway === 'paystack' && <div className="w-3 h-3 bg-green-500 rounded-full"></div>}
-            </div>
-          </button>
-        </div>
-      </main>
-
-      <footer className="fixed bottom-16 left-0 right-0 bg-white p-4 space-y-3 border-t">
         <button 
-          onClick={handlePayment} 
-          className="w-full bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition border-2 border-transparent"
+          type="submit" 
+          className="w-full bg-green-700 text-white font-bold py-4 rounded-xl mt-4 shadow-md hover:bg-green-800 transition"
         >
-          Proceed to Payment
+          Confirm Order
         </button>
-        <button 
-          onClick={() => navigate(-1)} 
-          className="w-full border-2 border-red-400 text-red-500 font-bold py-3 rounded-xl hover:bg-red-50 transition"
-        >
-          Cancel
-        </button>
-      </footer>
+      </form>
     </div>
   );
 }

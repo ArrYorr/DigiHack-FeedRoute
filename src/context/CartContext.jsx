@@ -7,6 +7,9 @@ export const useCart = () => useContext(CartContext);
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
+  // --- 1. NEW: Calculate Total Automatically ---
+  const cartTotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+
   const addToCart = (product, quantity) => {
     setCartItems(prevItems => {
       const existingItem = prevItems.find(item => item.id === product.id);
@@ -15,7 +18,12 @@ export const CartProvider = ({ children }) => {
           item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
         );
       }
-      return [...prevItems, { ...product, quantity }];
+      
+      // --- 2. FIX: Ensure item has an image ---
+      // If product has no 'imageUrl' but has a 'gallery', use the first image from gallery
+      const imageToUse = product.imageUrl || (product.gallery && product.gallery[0]) || null;
+
+      return [...prevItems, { ...product, imageUrl: imageToUse, quantity }];
     });
   };
 
@@ -23,9 +31,9 @@ export const CartProvider = ({ children }) => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
   };
 
-  const updateItemQuantity = (productId, newQuantity) => {
+  // --- 3. FIX: Renamed function to match CartPage (updateItemQuantity -> updateQuantity) ---
+  const updateQuantity = (productId, newQuantity) => {
     if (newQuantity < 1) {
-      // If quantity drops below 1, remove the item
       removeFromCart(productId);
     } else {
       setCartItems(prevItems =>
@@ -40,7 +48,8 @@ export const CartProvider = ({ children }) => {
     cartItems,
     addToCart,
     removeFromCart,
-    updateItemQuantity,
+    updateQuantity, // Now matches what CartPage asks for
+    cartTotal,      // Now available for CartPage to read
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
