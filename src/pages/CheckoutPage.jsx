@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
-import { FiCheckCircle, FiSearch } from 'react-icons/fi';
+import { FiCheckCircle, FiChevronDown, FiMapPin } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
 
-// 1. Import the data from your new file
+// Import data from your file
 import { nigeriaLocations } from '../data/nigeriaData';
 
 function CheckoutPage() {
@@ -12,47 +12,67 @@ function CheckoutPage() {
   const { setCurrentPageTitle } = useOutletContext();
   
   const [step, setStep] = useState(1);
+  
+  // State for Form
   const [selectedState, setSelectedState] = useState("");
   const [selectedLGA, setSelectedLGA] = useState("");
   const [availableLGAs, setAvailableLGAs] = useState([]);
+
+  // State for Custom Dropdown
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [stateSearch, setStateSearch] = useState("");
+
+  // Refs for click outside logic
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     setCurrentPageTitle("Checkout");
   }, [setCurrentPageTitle]);
 
-  // --- 2. SEARCH LOGIC ---
-  const handleStateInput = (e) => {
+  // Close dropdown if clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [dropdownRef]);
+
+  // Filter states based on search
+  const filteredStates = Object.keys(nigeriaLocations).filter((state) =>
+    state.toLowerCase().includes(stateSearch.toLowerCase())
+  );
+
+  const handleStateSelect = (state) => {
+    setSelectedState(state);
+    setStateSearch(state); // Set input text to selected state
+    setAvailableLGAs(nigeriaLocations[state]); // Load LGAs
+    setSelectedLGA(""); // Reset LGA
+    setIsDropdownOpen(false); // Close dropdown
+  };
+
+  const handleStateInputChange = (e) => {
     const val = e.target.value;
-    setSelectedState(val);
-
-    // Check if the typed value matches a real state (Case-insensitive check)
-    // This allows "lagos" to match "Lagos"
-    const match = Object.keys(nigeriaLocations).find(
-      (state) => state.toLowerCase() === val.toLowerCase()
-    );
-
-    if (match) {
-      setAvailableLGAs(nigeriaLocations[match]);
-      setSelectedLGA(""); // Reset LGA if they change state
-    } else {
-      setAvailableLGAs([]); // Clear LGAs if state is invalid/typing
+    setStateSearch(val);
+    setIsDropdownOpen(true);
+    
+    // If user clears input, reset everything
+    if (val === "") {
+      setSelectedState("");
+      setAvailableLGAs([]);
     }
   };
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
     
-    // Validation: Ensure they actually picked a valid state
-    const isValidState = Object.keys(nigeriaLocations).some(
-      (s) => s.toLowerCase() === selectedState.toLowerCase()
-    );
-
-    if (!isValidState) {
+    // Validation
+    if (!selectedState || !nigeriaLocations[selectedState]) {
       alert("Please select a valid State from the list.");
       return;
     }
-
-    // Validation: Ensure LGA is selected
     if (!selectedLGA) {
       alert("Please select your Local Government Area.");
       return;
@@ -84,6 +104,7 @@ function CheckoutPage() {
   return (
     <div className="bg-gray-50 min-h-full pb-24 p-4">
       
+      {/* Order Summary */}
       <div className="bg-white p-4 rounded-xl shadow-sm mb-6">
         <h3 className="font-bold text-gray-700 mb-4 border-b pb-2">Order Summary</h3>
         {cartItems.map((item, index) => (
@@ -100,30 +121,44 @@ function CheckoutPage() {
 
       <form onSubmit={handlePlaceOrder} className="space-y-4">
         
-        {/* --- 3. SEARCHABLE STATE INPUT --- */}
-        <div>
+        {/* --- CUSTOM SEARCHABLE STATE DROPDOWN --- */}
+        <div className="relative" ref={dropdownRef}>
           <label className="block text-gray-700 font-bold mb-2">State</label>
           <div className="relative">
             <input 
-              list="nigeria-states" 
-              value={selectedState} 
-              onChange={handleStateInput}
-              placeholder="Type to search state..."
+              type="text"
+              value={stateSearch}
+              onChange={handleStateInputChange}
+              onFocus={() => setIsDropdownOpen(true)}
+              placeholder="Select or Type State..."
               className="w-full border border-gray-300 bg-white rounded-lg p-3 pr-10 focus:outline-none focus:ring-2 focus:ring-green-500"
               required 
             />
-            <FiSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            
-            {/* The Hidden List of Options that appears when typing */}
-            <datalist id="nigeria-states">
-              {Object.keys(nigeriaLocations).sort().map((state) => (
-                <option key={state} value={state} />
-              ))}
-            </datalist>
+            <FiChevronDown className={`absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
           </div>
+
+          {/* The Dropdown List */}
+          {isDropdownOpen && (
+            <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl max-h-60 overflow-y-auto">
+              {filteredStates.length > 0 ? (
+                filteredStates.sort().map((state) => (
+                  <div 
+                    key={state} 
+                    onClick={() => handleStateSelect(state)}
+                    className="p-3 hover:bg-green-50 cursor-pointer border-b border-gray-50 last:border-b-0 text-gray-700 flex items-center"
+                  >
+                    <FiMapPin className="mr-2 text-green-500" size={14} />
+                    {state}
+                  </div>
+                ))
+              ) : (
+                <div className="p-3 text-gray-400 text-sm text-center">No state found</div>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* 4. LGA DROPDOWN (Auto-updates based on State) */}
+        {/* --- LGA DROPDOWN --- */}
         <div>
           <label className="block text-gray-700 font-bold mb-2">Local Govt. Area</label>
           <select 
@@ -133,7 +168,7 @@ function CheckoutPage() {
             className={`w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-green-500 ${availableLGAs.length === 0 ? 'bg-gray-100 text-gray-400' : 'bg-white'}`}
             required
           >
-            <option value="">{availableLGAs.length > 0 ? "Select LGA" : "Type a valid State first"}</option>
+            <option value="">{availableLGAs.length > 0 ? "Select LGA" : "Select State First"}</option>
             {availableLGAs.map((lga) => (
               <option key={lga} value={lga}>{lga}</option>
             ))}
