@@ -1,97 +1,87 @@
-import { useNavigate, useOutletContext } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
-import { IoIosArrowBack } from 'react-icons/io';
-import { FiBell, FiTrash2, FiPlus, FiMinus, FiX } from 'react-icons/fi';
-
-// This is a sub-component defined inside CartPage for simplicity
-function CartItem({ item }) {
-  const { updateItemQuantity, removeFromCart } = useCart();
-
-  return (
-    <div className="flex items-center bg-white p-4 rounded-lg shadow-sm">
-      <div className="relative">
-        <img src={item.imageUrl || item.gallery[0]} alt={item.name} className="w-20 h-20 rounded-lg object-cover" />
-        <button onClick={() => removeFromCart(item.id)} className="absolute top-1 right-1 bg-red-100 text-red-500 p-1 rounded-full">
-          <FiTrash2 size={12} />
-        </button>
-      </div>
-      <div className="flex-1 ml-4">
-        <h3 className="font-bold">{item.name}</h3>
-        <p className="text-sm text-gray-500">{item.poNumber}</p>
-        <div className="flex justify-between items-center mt-2">
-          <p className="font-bold text-green-600">₦{(item.price * item.quantity).toLocaleString()}</p>
-          <div className="flex items-center space-x-3">
-            <button onClick={() => updateItemQuantity(item.id, item.quantity - 1)} className="bg-gray-200 p-2 rounded-full"><FiMinus /></button>
-            <span className="font-bold text-lg">{item.quantity}</span>
-            <button onClick={() => updateItemQuantity(item.id, item.quantity + 1)} className="bg-green-600 text-white p-2 rounded-full"><FiPlus /></button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
+import { useEffect } from 'react';
+import { useOutletContext, Link, useNavigate } from 'react-router-dom';
+import { FiTrash2 } from 'react-icons/fi';
+import { useCart } from '../context/CartContext'; // Assuming you have this
 
 function CartPage() {
-  const { cartItems } = useCart();
   const navigate = useNavigate();
+  const { cartItems, removeFromCart, updateQuantity, cartTotal } = useCart();
   
-  const { isNotificationsOpen, handleNotificationToggle, notificationCount } = useOutletContext();
+  // 1. GET THE SET TITLE FUNCTION FROM LAYOUT
+  const { setCurrentPageTitle } = useOutletContext();
 
-  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  // 2. SET THE HEADER TITLE ON MOUNT
+  useEffect(() => {
+    setCurrentPageTitle("My Cart");
+  }, [setCurrentPageTitle]);
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      {/* --- Top Bar --- */}
-      <header className="flex justify-between items-center p-4 bg-white border-b">
-        <button onClick={() => navigate(-1)} className="text-gray-600">
-          <IoIosArrowBack size={24} />
-        </button>
-        <h1 className="font-bold text-lg">Cart</h1>
-          {/* Notification Bell with Count */}
-        <button onClick={handleNotificationToggle} className="relative z-20">
-          {isNotificationsOpen ? <FiX size={24} className="text-gray-600" /> : <FiBell size={24} className="text-gray-600" />}
-          {notificationCount > 0 && (
-            <span className="absolute top-0 right-0 block h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center transform translate-x-1/4 -translate-y-1/4">
-              {notificationCount}
-            </span>
-          )}
-        </button>
-      </header>
+    <div className="bg-gray-50 min-h-full pb-24 p-4">
+      {/* ❌ DELETE THE <CustomerHeader> or <header> SECTION HERE 
+         The MainLayout is already rendering it for you!
+      */}
 
-      {/* --- Main Content --- */}
-      <main className="p-4 pb-48">
-        {cartItems.length === 0 ? (
-          <div className="text-center text-gray-500 mt-20">
-            <p>Your cart is empty.</p>
-          </div>
-        ) : (
+      {cartItems.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-64 text-center">
+          <p className="text-gray-500 mb-4">Your cart is empty</p>
+          <Link to="/customer-landing" className="text-green-600 font-bold">Start Shopping</Link>
+        </div>
+      ) : (
+        <>
           <div className="space-y-4">
-            {cartItems.map(item => (
-              <CartItem key={item.id} item={item} />
+            {cartItems.map((item) => (
+              <div key={item.id} className="bg-white p-4 rounded-xl shadow-sm flex items-center gap-4">
+                <img src={item.imageUrl} alt={item.name} className="w-16 h-16 rounded-lg object-cover" />
+                <div className="flex-1">
+                  <h3 className="font-bold text-gray-800">{item.name}</h3>
+                  <p className="text-sm text-green-600 font-semibold">₦{item.price}</p>
+                  
+                  <div className="flex items-center gap-3 mt-2">
+                    <button 
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      className="w-6 h-6 bg-gray-100 rounded text-gray-600 flex items-center justify-center"
+                    >
+                      -
+                    </button>
+                    <span className="text-sm font-bold">{item.quantity}</span>
+                    <button 
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      className="w-6 h-6 bg-green-100 text-green-700 rounded flex items-center justify-center"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+                <button onClick={() => removeFromCart(item.id)} className="text-red-400 p-2">
+                  <FiTrash2 />
+                </button>
+              </div>
             ))}
           </div>
-        )}
-      </main>
 
-      {/* --- Footer with Totals and Buttons --- */}
-      <footer className="fixed bottom-16 left-0 right-0 bg-white p-4 pt-6 shadow-lg rounded-t-2xl">
-        <div className="flex justify-between items-center mb-4">
-          <span className="text-gray-500">Total:</span>
-          <span className="text-2xl font-bold">₦{total.toLocaleString()}</span>
-        </div>
-        <div className="space-y-3">
+          <div className="mt-8 bg-white p-4 rounded-xl shadow-sm">
+            <div className="flex justify-between mb-2">
+              <span className="text-gray-600">Subtotal</span>
+              <span className="font-bold">₦{cartTotal.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between mb-4">
+              <span className="text-gray-600">Delivery</span>
+              <span className="font-bold">₦1,500</span>
+            </div>
+            <div className="border-t pt-2 flex justify-between text-lg font-bold text-green-800">
+              <span>Total</span>
+              <span>₦{(cartTotal + 1500).toLocaleString()}</span>
+            </div>
+          </div>
+
           <button 
-            onClick={() => navigate('/checkout')} 
-            className="w-full bg-green-600 text-white font-bold py-3 rounded-full hover:bg-green-700 transition border-2 border-transparent"
+            onClick={() => navigate('/checkout')}
+            className="w-full bg-green-700 text-white font-bold py-4 rounded-xl mt-6 shadow-md hover:bg-green-800 transition"
           >
-            Proceed to Order
+            Proceed to Checkout
           </button>
-          <button className="w-full border-2 border-gray-300 text-gray-700 font-bold py-3 rounded-full hover:bg-gray-100 transition">
-            Save
-          </button>
-        </div>
-      </footer>
+        </>
+      )}
     </div>
   );
 }

@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useOutletContext, Link } from 'react-router-dom';
-import { FiBell, FiUpload, FiX } from 'react-icons/fi';
+import { FiUpload } from 'react-icons/fi';
 import ProductCard from '../components/ProductCard';
-import FarmerBottomNavBar from '../components/FarmerBottomNavBar';
 
-// --- Mock Data for the Farmer's Products ---
+// --- Mock Data ---
 import cornImg from '../assets/corn.jpg';
 import tomatoesImg from '../assets/tomatoes.jpg';
 import carrotsImg from '../assets/carrots.jpg';
@@ -18,13 +17,21 @@ const farmerProducts = [
 ];
 
 const categories = ['Products', 'Fruits', 'Legumes', 'Tubers', 'Vegetables'];
-// --- End of Mock Data ---
-
 
 function FarmerLandingPage() {
-  const { isNotificationsOpen, handleNotificationToggle, notificationCount } = useOutletContext();
+  // 1. Get setPageTitle from context
+  const { setPageTitle } = useOutletContext();
+  
   const [activeTab, setActiveTab] = useState('Products');
   const [filteredProducts, setFilteredProducts] = useState(farmerProducts);
+  const [farmerName, setFarmerName] = useState("Farmer");
+
+  // 2. Set the Header Title dynamically
+  useEffect(() => {
+    const storedName = localStorage.getItem("farmerName") || "Farmer";
+    setFarmerName(storedName);
+    setPageTitle(`Hi, ${storedName}`); // This updates the top green header
+  }, [setPageTitle]);
 
   useEffect(() => {
     if (activeTab === 'Products') {
@@ -37,35 +44,19 @@ function FarmerLandingPage() {
     }
   }, [activeTab]);
 
-
   return (
-    <div className="bg-white h-full flex flex-col">
-      <header className="sticky top-0 bg-white z-10 p-4">
-        <div className="flex justify-between items-center">
-          <h1 className="text-xl font-bold text-gray-800">Hi DigiHack</h1>
-          <button onClick={handleNotificationToggle} className="relative z-20">
-            {isNotificationsOpen ? <FiX size={24} className="text-gray-600" /> : <FiBell size={24} className="text-gray-600" />}
-            {notificationCount > 0 && (
-              <span className="absolute top-0 right-0 block h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center transform translate-x-1/4 -translate-y-1/4">
-                {notificationCount}
-              </span>
-            )}
-          </button>
-        </div>
-      </header>
+    <div className="bg-white min-h-full flex flex-col">
+      {/* Note: NO <header> here anymore. The Layout handles it. */}
       
-      <main className="flex-1 overflow-y-auto overflow-x-hidden pb-24">
+      <main className="flex-1 p-0">
         {/* Top Horizontal Scroll */}
         <div className="mt-4">
-          <div className="flex overflow-x-auto space-x-4 pb-2">
-            <div className="flex-shrink-0 w-4"></div>
+          <div className="flex overflow-x-auto space-x-4 pb-2 px-4">
             {farmerProducts.slice(0, 3).map(product => (
               <div key={product.id} className="w-40 flex-shrink-0">
-               
                 <ProductCard product={product} basePath="/farmer-products" />
               </div>
             ))}
-            <div className="flex-shrink-0 w-4"></div>
           </div>
         </div>
 
@@ -98,15 +89,12 @@ function FarmerLandingPage() {
         </div>
         
         {/* Farmer's Product Grid */}
-        <div className="px-4 grid grid-cols-3 gap-4">
+        <div className="px-4 grid grid-cols-2 md:grid-cols-3 gap-4 pb-4">
           {filteredProducts.map(product => (
-           
             <ProductCard key={product.id} product={product} basePath="/farmer-products" />
           ))}
         </div>
       </main>
-
-      <FarmerBottomNavBar />
     </div>
   );
 }

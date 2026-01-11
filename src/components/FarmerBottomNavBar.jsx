@@ -1,31 +1,38 @@
 import { Link, useLocation } from 'react-router-dom';
-import { FiHome, FiPackage, FiClipboard } from 'react-icons/fi';
+import { FiHome, FiClipboard, FiUser } from 'react-icons/fi';
 
 function FarmerBottomNavBar() {
   const location = useLocation();
   const activePath = location.pathname;
 
-  
-  const sampleOrderId = 'GRB1234567890';
+  const getLinkClass = (pathPrefix) => {
+    // Check if the current path starts with the link's path (for nested routes like /farmer-orders/123)
+    const isActive = activePath.startsWith(pathPrefix);
+    return `flex flex-col items-center transition-colors duration-200 ${
+      isActive ? 'text-white scale-110' : 'text-green-200 hover:text-white'
+    }`;
+  };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200">
+    <div className="fixed bottom-0 left-0 right-0 bg-green-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-green-800 z-50">
       <div className="flex justify-around items-center h-16">
         
-        <Link to="/farmer-dashboard" className={`flex flex-col items-center transition-colors duration-200 ${activePath.startsWith('/farmer-dashboard') ? 'text-green-600' : 'text-gray-400'}`}>
+        {/* 1. HOME BUTTON */}
+        <Link to="/farmer-dashboard" className={getLinkClass('/farmer-dashboard')}>
           <FiHome size={24} />
           <span className={`text-xs ${activePath.startsWith('/farmer-dashboard') ? 'font-bold' : ''}`}>Home</span>
         </Link>
         
-        <Link to="/farmer-products" className={`flex flex-col items-center transition-colors duration-200 ${activePath.startsWith('/farmer-products') ? 'text-green-600' : 'text-gray-400'}`}>
-          <FiPackage size={24} />
-          <span className={`text-xs ${activePath.startsWith('/farmer-products') ? 'font-bold' : ''}`}>Products</span>
+        {/* 2. ORDERS BUTTON */}
+        <Link to="/farmer-orders" className={getLinkClass('/farmer-orders')}>
+          <FiClipboard size={24} />
+          <span className={`text-xs ${activePath.startsWith('/farmer-orders') ? 'font-bold' : ''}`}>Orders</span>
         </Link>
 
-      
-        <Link to={`/farmer-orders/${sampleOrderId}`} className={`flex flex-col items-center transition-colors duration-200 ${activePath.startsWith('/farmer-orders') ? 'text-green-600' : 'text-gray-400'}`}>
-          <FiClipboard size={24} />
-          <span className={`text-xs ${activePath.startsWith('/farmer-orders') ? 'font-bold' : ''}`}>Order</span>
+        {/* 3. PROFILE BUTTON */}
+        <Link to="/farmer-profile" className={getLinkClass('/farmer-profile')}>
+          <FiUser size={24} />
+          <span className={`text-xs ${activePath.startsWith('/farmer-profile') ? 'font-bold' : ''}`}>Profile</span>
         </Link>
         
       </div>

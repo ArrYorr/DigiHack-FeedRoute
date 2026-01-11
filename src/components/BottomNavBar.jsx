@@ -1,26 +1,35 @@
-import { FiHome, FiShoppingCart, FiUser } from 'react-icons/fi'; // 1. Changed icon import
+import { FiHome, FiShoppingCart, FiUser } from 'react-icons/fi';
 import { Link, useLocation } from 'react-router-dom';
 
 function BottomNavBar() {
   const location = useLocation();
   const activePath = location.pathname;
 
+  // Helper function to determine styling
+  const getLinkClass = (path) => {
+    const isActive = activePath === path;
+    // Active: White text/icon. Inactive: Light Green text/icon.
+    return `flex flex-col items-center transition-colors duration-200 ${
+      isActive ? 'text-white scale-110' : 'text-green-200 hover:text-white'
+    }`;
+  };
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200">
+    // CHANGED: bg-white -> bg-green-700, border-t -> border-green-800
+    <div className="fixed bottom-0 left-0 right-0 bg-green-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-green-800 z-50">
       <div className="flex justify-around items-center h-16">
         
-        <Link to="/customer-landing" className={`flex flex-col items-center transition-colors duration-200 ${activePath === '/customer-landing' ? 'text-green-600' : 'text-gray-400'}`}>
+        <Link to="/customer-landing" className={getLinkClass('/customer-landing')}>
           <FiHome size={24} />
           <span className={`text-xs ${activePath === '/customer-landing' ? 'font-bold' : ''}`}>Home</span>
         </Link>
         
-        <Link to="/cart" className={`flex flex-col items-center transition-colors duration-200 ${activePath === '/cart' ? 'text-green-600' : 'text-gray-400'}`}>
+        <Link to="/cart" className={getLinkClass('/cart')}>
           <FiShoppingCart size={24} />
           <span className={`text-xs ${activePath === '/cart' ? 'font-bold' : ''}`}>Cart</span>
         </Link>
 
-        {/* 2. Updated the link, icon, and text for Profile */}
-        <Link to="/profile" className={`flex flex-col items-center transition-colors duration-200 ${activePath === '/profile' ? 'text-green-600' : 'text-gray-400'}`}>
+        <Link to="/profile" className={getLinkClass('/profile')}>
           <FiUser size={24} />
           <span className={`text-xs ${activePath === '/profile' ? 'font-bold' : ''}`}>Profile</span>
         </Link>

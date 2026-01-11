@@ -20,7 +20,7 @@ function MainLayout() {
     <div className="relative h-screen flex flex-col">
       <NotificationPanel isOpen={isNotificationsOpen} />
       
-      {/* MODIFIED: This now passes the required data as props to the header */}
+      {/* 1. Header for sub-pages (Works fine) */}
       {showHeader && (
         <CustomerHeader 
           title={currentPageTitle} 
@@ -31,7 +31,13 @@ function MainLayout() {
       )}
 
       <div className="flex-1 overflow-y-auto">
-        <Outlet context={{ setCurrentPageTitle }} />
+        {/* 2. FIX: Pass notification props to the Landing Page via Context */}
+        <Outlet context={{ 
+          setCurrentPageTitle,
+          isNotificationsOpen, 
+          handleNotificationToggle, 
+          notificationCount 
+        }} />
       </div>
       
       <BottomNavBar />

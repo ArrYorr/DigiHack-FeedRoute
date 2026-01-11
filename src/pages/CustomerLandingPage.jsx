@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { FiBell, FiSearch, FiX } from 'react-icons/fi';
 import ProductCard from '../components/ProductCard';
-import BottomNavBar from '../components/BottomNavBar';
 
 // --- Mock Data ---
 import cornImg from '../assets/corn.jpg';
@@ -20,85 +19,90 @@ const allProducts = [
 ];
 
 const categories = ['Products', 'Fruits', 'Legumes', 'Tubers', 'Vegetables'];
-// --- End of Mock Data ---
-
 
 function CustomerLandingPage() {
-  // --- Local State for this page ---
   const [activeTab, setActiveTab] = useState('Products');
   const [filteredProducts, setFilteredProducts] = useState(allProducts);
   const [newPostCount, setNewPostCount] = useState(3);
-  
-  // --- Shared State from MainLayout ---
+  const [customerName, setCustomerName] = useState("Customer");
+
+  // Get context from MainLayout
   const { isNotificationsOpen, handleNotificationToggle, notificationCount } = useOutletContext();
 
-  // --- Effects ---
+  useEffect(() => {
+    const storedName = localStorage.getItem("customerName");
+    if (storedName) setCustomerName(storedName);
+  }, []);
+
   useEffect(() => {
     if (activeTab === 'Products') {
       setFilteredProducts(allProducts);
     } else {
-      const newFilteredProducts = allProducts.filter(
-        (product) => product.category === activeTab
-      );
-      setFilteredProducts(newFilteredProducts);
+      setFilteredProducts(allProducts.filter(p => p.category === activeTab));
     }
   }, [activeTab]);
 
-  // --- Handlers ---
   const handleSeeMore = () => {
-    setNewPostCount(prevCount => Math.min(prevCount + 3, allProducts.length));
+    setNewPostCount(prev => Math.min(prev + 3, allProducts.length));
   };
 
   return (
     <div className="bg-white h-full flex flex-col">
-      {/* Header: Stays fixed at the top */}
-      <header className="sticky top-0 bg-white z-10 shadow-sm p-4">
+      
+      {/* --- UPDATED HEADER SECTION (GREEN) --- */}
+      <header className="sticky top-0 bg-green-700 z-10 shadow-md p-4 pb-6 rounded-b-2xl">
         <div className="flex justify-between items-center mb-4">
           <div>
-            <h1 className="text-xl font-bold text-gray-800">Hi DigiHack</h1>
+            <h1 className="text-xl font-bold text-white">Hi, {customerName}</h1>
+            <p className="text-green-100 text-xs">What do you want to buy today?</p>
           </div>
           <button onClick={handleNotificationToggle} className="relative z-20">
-            {isNotificationsOpen ? <FiX size={24} className="text-gray-600" /> : <FiBell size={24} className="text-gray-600" />}
+            {isNotificationsOpen ? (
+              <FiX size={24} className="text-white" />
+            ) : (
+              <FiBell size={24} className="text-white" />
+            )}
             {notificationCount > 0 && (
-              <span className="absolute top-0 right-0 block h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center transform translate-x-1/4 -translate-y-1/4">
+              <span className="absolute top-0 right-0 block h-5 w-5 rounded-full bg-white text-red-600 font-bold text-xs flex items-center justify-center transform translate-x-1/4 -translate-y-1/4">
                 {notificationCount}
               </span>
             )}
           </button>
         </div>
 
+        {/* Search Bar - styled to pop against the green */}
         <div className="relative">
           <input
             type="text"
-            placeholder="Which product do you want to buy?"
-            className="w-full bg-gray-100 border border-gray-200 rounded-full py-3 pl-4 pr-10 focus:outline-none"
+            placeholder="Search for maize, yam..."
+            className="w-full bg-white text-gray-800 border-none rounded-xl py-3 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-green-400 shadow-sm placeholder-gray-400"
           />
-          <FiSearch className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-500" />
+          <FiSearch className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400" />
         </div>
       </header>
+      {/* ------------------------------------- */}
 
-      {/* Main Content: This is the only section that scrolls */}
-      <main className="flex-1 overflow-y-auto overflow-x-hidden pb-24">
-        <div className="mb-6 mt-4">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden pb-24 pt-4">
+        {/* New Post Section */}
+        <div className="mb-6">
           <div className="flex justify-between items-center mb-2 px-4">
-            <h2 className="text-lg font-bold">New Post</h2>
+            <h2 className="text-lg font-bold text-gray-800">New Post</h2>
             {newPostCount < allProducts.length && (
               <button onClick={handleSeeMore} className="text-sm text-green-600 font-semibold">
                 see more
               </button>
             )}
           </div>
-          <div className="flex overflow-x-auto space-x-4 pb-2">
-            <div className="flex-shrink-0 w-4" aria-hidden="true"></div>
+          <div className="flex overflow-x-auto space-x-4 pb-2 px-4">
             {allProducts.slice(0, newPostCount).map(product => (
               <div key={product.id} className="w-36 flex-shrink-0">
                 <ProductCard product={product} />
               </div>
             ))}
-            <div className="flex-shrink-0 w-4" aria-hidden="true"></div>
           </div>
         </div>
 
+        {/* Categories */}
         <div className="px-4 mb-4">
           <div className="flex border-b border-gray-200">
             {categories.map((category) => (
@@ -109,7 +113,7 @@ function CustomerLandingPage() {
                   activeTab === category
                     ? 'text-green-600 border-b-2 border-green-600'
                     : 'text-gray-500'
-              }`}
+                }`}
               >
                 {category}
               </button>
@@ -117,14 +121,13 @@ function CustomerLandingPage() {
           </div>
         </div>
         
-        <div className="px-4 grid grid-cols-3 gap-4">
+        {/* Product Grid */}
+        <div className="px-4 grid grid-cols-2 md:grid-cols-3 gap-4">
           {filteredProducts.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </main>
-
-    
     </div>
   );
 }
