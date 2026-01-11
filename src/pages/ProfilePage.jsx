@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useOutletContext, Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiChevronRight, FiLogOut, FiShoppingBag, FiMapPin, FiCreditCard, FiHelpCircle } from 'react-icons/fi';
 
@@ -15,34 +15,48 @@ function ProfileLink({ icon, text, to }) {
   );
 }
 
-
 function ProfilePage() {
   const { setCurrentPageTitle } = useOutletContext();
   const navigate = useNavigate();
 
-  // Set the page title in the shared header
+  // 1. State for dynamic user info
+  const [customerName, setCustomerName] = useState("Customer");
+  const [customerEmail, setCustomerEmail] = useState("customer@example.com");
+
+  // Set the page title and load data
   useEffect(() => {
     setCurrentPageTitle('Profile');
+    
+    // 2. Fetch data from Local Storage
+    const storedName = localStorage.getItem("customerName");
+    const storedEmail = localStorage.getItem("customerEmail");
+
+    if (storedName) setCustomerName(storedName);
+    if (storedEmail) setCustomerEmail(storedEmail);
   }, [setCurrentPageTitle]);
   
   const handleLogout = () => {
-    // In a real app, you would clear authentication tokens here
+    // Clear the stored data on logout
+    localStorage.removeItem("customerName");
+    localStorage.removeItem("customerEmail");
+    
     console.log('User logging out...');
-    navigate('/'); // Navigate back to the welcome page
+    navigate('/'); 
   };
 
   return (
     <div className="p-4 space-y-6">
       {/* --- User Info Card --- */}
       <div className="flex items-center bg-white p-4 rounded-lg shadow-sm">
-        <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
+        <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center border-2 border-green-100 overflow-hidden">
           <FiUser size={32} className="text-gray-500" />
         </div>
         <div className="flex-1 ml-4">
-          <h2 className="font-bold text-lg text-gray-800">DigiHack</h2>
-          <p className="text-sm text-gray-500">digihack@example.com</p>
+          {/* 3. Display Dynamic Info */}
+          <h2 className="font-bold text-lg text-gray-800">{customerName}</h2>
+          <p className="text-sm text-gray-500">{customerEmail}</p>
         </div>
-        <Link to="/edit-profile" className="text-sm font-semibold text-green-600">
+        <Link to="/edit-profile" className="text-sm font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">
           Edit
         </Link>
       </div>

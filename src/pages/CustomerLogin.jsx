@@ -14,8 +14,13 @@ function CustomerLogin() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // --- KEY CHANGE: Save the name here ---
-    localStorage.setItem("customerName", "Adewale Chibuzor");
+    
+    // --- KEY CHANGE: Save Email to Storage ---
+    localStorage.setItem("customerEmail", formData.email);
+    
+    // You can keep a hardcoded name for the demo, or use "Customer"
+    localStorage.setItem("customerName", "Adewale Chibuzor"); 
+    
     navigate('/customer-landing');
   };
 

@@ -4,13 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 function SignupPage() {
   const navigate = useNavigate();
   
-  // State to track if user is registering as 'customer' or 'farmer'
   const [role, setRole] = useState("customer");
   
-  // State for form inputs
   const [formData, setFormData] = useState({
     fullName: "",
-    contact: "", // Will be email for customer, phone for farmer
+    contact: "", 
     password: ""
   });
 
@@ -21,16 +19,14 @@ function SignupPage() {
   const handleSignup = (e) => {
     e.preventDefault();
     
-    // Logic to register based on selected role
     if (role === "farmer") {
-      // 1. Save Farmer Name
       localStorage.setItem("farmerName", formData.fullName || "New Farmer");
-      // 2. Redirect to Farmer Dashboard
       navigate("/farmer-dashboard");
     } else {
-      // 1. Save Customer Name
+      // --- KEY CHANGE: Save both Name AND Email ---
       localStorage.setItem("customerName", formData.fullName || "New Customer");
-      // 2. Redirect to Customer Landing
+      localStorage.setItem("customerEmail", formData.contact); // contact acts as email for customers
+      
       navigate("/customer-landing");
     }
   };
@@ -46,7 +42,6 @@ function SignupPage() {
           Join us as a {role === 'customer' ? 'Buyer' : 'Farmer'}
         </p>
 
-        {/* --- ROLE TOGGLE BUTTONS --- */}
         <div className="flex bg-gray-100 p-1 rounded-xl mb-6">
           <button
             type="button"
