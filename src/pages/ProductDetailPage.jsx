@@ -49,8 +49,6 @@ function ProductDetailPage() {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   
-  // 1. Get the title setter from the Global Layout
-  // We removed notification props because the Global Header handles that now
   const { setCurrentPageTitle } = useOutletContext(); 
 
   const [product, setProduct] = useState(null);
@@ -60,7 +58,6 @@ function ProductDetailPage() {
   const [isLiked, setIsLiked] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  // 2. Set the Global Header Title on Mount
   useEffect(() => {
     setCurrentPageTitle("Details"); 
   }, [setCurrentPageTitle]);
@@ -96,11 +93,9 @@ function ProductDetailPage() {
   if (error) return <div className="flex h-screen items-center justify-center text-red-500">{error}</div>;
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-32 md:pb-0">
+    <div className="bg-gray-50 min-h-screen pb-8">
       
-      {/* ❌ HEADER REMOVED: It is now handled by MainLayout.jsx */}
-
-      <div className="max-w-6xl mx-auto md:p-8 pt-4"> {/* Added pt-4 for top spacing */}
+      <div className="max-w-6xl mx-auto md:p-8 pt-4">
         <div className="bg-white md:rounded-3xl md:shadow-lg overflow-hidden md:flex">
           
           {/* --- LEFT: Image Gallery --- */}
@@ -122,7 +117,6 @@ function ProductDetailPage() {
               </button>
             </div>
 
-            {/* Thumbnails */}
             <div className="flex gap-3 mt-4 overflow-x-auto pb-2 scrollbar-hide">
               {product.gallery.map((img, idx) => (
                 <button 
@@ -178,19 +172,32 @@ function ProductDetailPage() {
               </ul>
             </div>
 
-            {/* Desktop Actions (Hidden on Mobile) */}
-            <div className="hidden md:flex items-center gap-4 mt-auto pt-6 border-t">
-               <div className="flex items-center bg-gray-100 rounded-full px-4 py-2">
-                <button onClick={decrementQuantity} className="p-2 hover:text-green-600"><FiMinus /></button>
-                <span className="mx-4 font-bold text-lg w-6 text-center">{quantity}</span>
-                <button onClick={incrementQuantity} className="p-2 hover:text-green-600"><FiPlus /></button>
+            {/* --- STATIONARY ACTIONS SECTION --- */}
+            <div className="flex flex-col md:flex-row items-center gap-4 mt-8 pt-6 border-t">
+               
+               {/* Quantity Selector: Slightly reduced padding/size */}
+               <div className="flex items-center justify-center w-full md:w-auto bg-gray-100 rounded-full px-3 py-2">
+                <button onClick={decrementQuantity} className="p-2 hover:text-green-600"><FiMinus size={18} /></button>
+                <span className="mx-3 font-bold text-base w-4 text-center">{quantity}</span>
+                <button onClick={incrementQuantity} className="p-2 hover:text-green-600"><FiPlus size={18} /></button>
               </div>
-              <button onClick={handleAddToCart} className="flex-1 bg-gray-900 text-white font-bold py-4 rounded-full hover:bg-gray-800 transition flex items-center justify-center gap-2">
-                <FiShoppingCart /> Add to Cart
-              </button>
-              <button onClick={handleOrder} className="flex-1 bg-green-600 text-white font-bold py-4 rounded-full hover:bg-green-700 transition shadow-lg shadow-green-200">
-                Buy Now
-              </button>
+
+              {/* Buttons: Reduced size (py-3, text-sm) */}
+              <div className="flex gap-4 w-full md:flex-1">
+                <button 
+                  onClick={handleAddToCart} 
+                  className="flex-1 bg-gray-900 text-white font-bold py-3 text-sm rounded-full hover:bg-gray-800 transition flex items-center justify-center gap-2"
+                >
+                  <FiShoppingCart size={18} /> Add to Cart
+                </button>
+                <button 
+                  onClick={handleOrder} 
+                  className="flex-1 bg-green-600 text-white font-bold py-3 text-sm rounded-full hover:bg-green-700 transition shadow-md shadow-green-100"
+                >
+                  Buy Now
+                </button>
+              </div>
+
             </div>
 
           </div>
@@ -206,23 +213,6 @@ function ProductDetailPage() {
                </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* --- Mobile Fixed Bottom Action Bar --- */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 z-40 md:hidden pb-safe">
-        <div className="flex gap-3">
-          <div className="flex items-center bg-gray-100 rounded-xl px-2">
-            <button onClick={decrementQuantity} className="p-3 text-gray-600"><FiMinus /></button>
-            <span className="font-bold text-lg w-4 text-center">{quantity}</span>
-            <button onClick={incrementQuantity} className="p-3 text-gray-600"><FiPlus /></button>
-          </div>
-          <button onClick={handleAddToCart} className="flex-1 bg-gray-900 text-white font-bold rounded-xl py-3 text-sm">
-            Add to Cart
-          </button>
-          <button onClick={handleOrder} className="flex-1 bg-green-600 text-white font-bold rounded-xl py-3 text-sm shadow-lg shadow-green-100">
-            Buy Now
-          </button>
         </div>
       </div>
 

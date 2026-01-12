@@ -10,12 +10,12 @@ import carrotsImg from '../assets/carrots.jpg';
 import berriesImg from '../assets/berries.jpg';
 
 const allProducts = [
-  { id: 1, name: 'Maize', price: 100, imageUrl: cornImg, category: 'Products' },
-  { id: 2, name: 'Tomatoes', price: 180, imageUrl: tomatoesImg, category: 'Vegetables' },
-  { id: 3, name: 'Carrots', price: 150, imageUrl: carrotsImg, category: 'Tubers' },
-  { id: 4, name: 'Berries', price: 250, imageUrl: berriesImg, category: 'Fruits' },
-  { id: 5, name: 'Extra Maize', price: 110, imageUrl: cornImg, category: 'Products' },
-  { id: 6, name: 'More Berries', price: 260, imageUrl: berriesImg, category: 'Fruits' },
+  { id: 1, name: 'Maize', price: 7500, imageUrl: cornImg, category: 'Products' },
+  { id: 2, name: 'Tomatoes', price: 5000, imageUrl: tomatoesImg, category: 'Vegetables' },
+  { id: 3, name: 'Carrots', price: 2500, imageUrl: carrotsImg, category: 'Tubers' },
+  { id: 4, name: 'Berries', price: 2000, imageUrl: berriesImg, category: 'Fruits' },
+  { id: 5, name: 'Extra Maize', price: 1100, imageUrl: cornImg, category: 'Products' },
+  { id: 6, name: 'More Berries', price: 1500, imageUrl: berriesImg, category: 'Fruits' },
 ];
 
 const categories = ['Products', 'Fruits', 'Legumes', 'Tubers', 'Vegetables'];
