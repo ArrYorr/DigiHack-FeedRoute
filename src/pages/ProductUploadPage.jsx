@@ -1,16 +1,24 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { IoIosArrowBack } from 'react-icons/io';
-import { FiBell, FiUpload, FiCamera, FiX } from 'react-icons/fi';
+import { useNavigate, useOutletContext } from 'react-router-dom'; // 1. Added useOutletContext
+import { FiUpload, FiCamera, FiX } from 'react-icons/fi';
+// Removed IoIosArrowBack and FiBell imports as they are in the global header now
 
 function ProductUploadPage() {
   const navigate = useNavigate();
+  
+  // 2. Get the global title setter
+  const { setPageTitle } = useOutletContext(); 
 
   // --- State for the form fields ---
   const [uploadedImages, setUploadedImages] = useState([]);
   const [category, setCategory] = useState('Fruits');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+
+  // 3. Set the Global Header Title on Mount
+  useEffect(() => {
+    setPageTitle("Upload Product"); 
+  }, [setPageTitle]);
 
   // --- Handlers ---
   const handleFileChange = (e) => {
@@ -32,33 +40,16 @@ function ProductUploadPage() {
     const formData = { category, title, description, images: uploadedImages.map(img => img.file.name) };
     console.log('Submitting Product:', formData);
     alert('Product submitted! Check the console for the data.');
+    navigate('/farmer-dashboard'); // Optional: Redirect after upload
   };
 
   return (
     <div className="p-4 pb-24">
       
-     
-      <div className="flex justify-between items-center mb-6">
-        
-        <div className="w-10">
-          <button onClick={() => navigate(-1)} className="text-gray-600">
-            <IoIosArrowBack size={24} />
-          </button>
-        </div>
-        
-        
-        <h1 className="font-bold text-lg">Product</h1>
-
-       
-        <div className="w-10 flex justify-end">
-          <div className="relative">
-            <FiBell size={24} className="text-gray-600" />
-          </div>
-        </div>
-      </div>
+      {/* ❌ REMOVED: Local Header Section to prevent double headers */}
       
       {/* Form Content */}
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 mt-4">
         <div className="bg-white p-4 rounded-lg shadow-sm">
           <label htmlFor="file-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
             <div className="flex flex-col items-center justify-center">
