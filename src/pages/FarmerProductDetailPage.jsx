@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
-import { IoIosArrowBack } from 'react-icons/io';
-import { FiBell, FiHeart, FiMapPin, FiEdit, FiTrash2, FiX } from 'react-icons/fi';
+import { FiMapPin, FiEdit, FiTrash2, FiHeart } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa';
 
 // --- Mock Data ---
@@ -9,7 +8,7 @@ import cornImg from '../assets/corn.jpg';
 import tomatoesImg from '../assets/tomatoes.jpg';
 import carrotsImg from '../assets/carrots.jpg';
 import onionsImg from '../assets/onions.jpg';
-import orangesImg from '../assets/oranges.jpg'; // The image from the screenshot
+import orangesImg from '../assets/oranges.jpg'; 
 
 const farmerProductsData = {
   '1': {
@@ -21,7 +20,7 @@ const farmerProductsData = {
     price: 8000,
     description: 'Fresh, vine-ripened tomatoes, perfect for stews and salads.',
     benefits: ['Excellent source of Vitamin C.', 'Rich in lycopene.'],
-    gallery: [tomatoesImg, cornImg, carrotsImg],
+    gallery: [tomatoesImg, tomatoesImg, tomatoesImg],
   },
   '2': {
     id: 2,
@@ -32,7 +31,7 @@ const farmerProductsData = {
     price: 7500,
     description: 'Freshly harvested maize, perfect for a variety of local dishes.',
     benefits: ['Rich in fiber.', 'Great source of energy.'],
-    gallery: [cornImg, tomatoesImg, carrotsImg],
+    gallery: [cornImg, cornImg, cornImg],
   },
   '3': {
     id: 3,
@@ -43,7 +42,7 @@ const farmerProductsData = {
     price: 6000,
     description: 'Sweet and crunchy carrots, packed with vitamins.',
     benefits: ['High in Vitamin A.', 'Good for eye health.'],
-    gallery: [carrotsImg, tomatoesImg, cornImg],
+    gallery: [carrotsImg, carrotsImg, carrotsImg],
   },
   '4': {
     id: 4,
@@ -54,32 +53,34 @@ const farmerProductsData = {
     price: 4500,
     description: 'Sharp and flavorful onions for all your cooking needs.',
     benefits: ['Adds flavor to any dish.', 'Contains antioxidants.'],
-    gallery: [onionsImg, tomatoesImg, cornImg],
+    gallery: [onionsImg, onionsImg, onionsImg],
   },
-  
   'oranges': {
-     id: 'oranges', // A unique ID
-     name: 'Maize', 
+     id: 'oranges',
+     name: 'Oranges', 
      poNumber: 'ST133',
-     location: 'Ikorodu Lagos, Nigeria',
+     location: 'Benue, Nigeria',
      rating: 4.75,
      price: 7500,
-     description: 'Freshly harvested oranges (labeled as Maize in screenshot).',
-     benefits: ['Rich in Vitamin C.'],
+     description: 'Freshly harvested oranges, sweet and juicy.',
+     benefits: ['Rich in Vitamin C.', 'Boosts immunity.'],
      gallery: [orangesImg, orangesImg, orangesImg],
   }
 };
-// --- End Mock Data ---
-
 
 function FarmerProductDetailPage() {
   const { productId } = useParams();
   const navigate = useNavigate();
-  const { isNotificationsOpen, handleNotificationToggle, notificationCount } = useOutletContext();
+  
+  const { setPageTitle } = useOutletContext(); 
   
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  useEffect(() => {
+    setPageTitle("Product Details");
+  }, [setPageTitle]);
 
   useEffect(() => {
     const data = farmerProductsData[productId];
@@ -89,47 +90,43 @@ function FarmerProductDetailPage() {
     setLoading(false);
   }, [productId]);
 
-  // ... (Slider effect and handlers remain the same)
-
-  if (loading) return <div>Loading...</div>;
-  if (!product) return <div className="p-10 text-center text-red-500">Error: Product not found for ID '{productId}'.</div>;
+  if (loading) return <div className="p-10 text-center text-green-600 font-bold">Loading...</div>;
+  if (!product) return <div className="p-10 text-center text-red-500">Product not found.</div>;
 
   return (
-    <div className="bg-white min-h-screen pb-24">
-      <header className="flex justify-between items-center p-4">
-        <button onClick={() => navigate(-1)} className="text-gray-600"><IoIosArrowBack size={24} /></button>
-        <h1 className="font-bold text-lg">Product Details</h1>
-        <button onClick={handleNotificationToggle} className="relative z-20">
-          {isNotificationsOpen ? <FiX size={24} className="text-gray-600" /> : <FiBell size={24} className="text-gray-600" />}
-          {notificationCount > 0 && (
-            <span className="absolute top-0 right-0 block h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center transform translate-x-1/4 -translate-y-1/4">
-              {notificationCount}
-            </span>
-          )}
-        </button>
-      </header>
-
-      <main className="max-w-4xl mx-auto md:grid md:grid-cols-2 md:gap-8">
+    <div className="bg-gray-50 min-h-screen pb-24">
+      
+      <main className="max-w-4xl mx-auto md:grid md:grid-cols-2 md:gap-8 p-4 pt-6">
+        
         {/* Left Column (Images) */}
         <div>
-          <div className="relative">
-            <img src={product.gallery[activeImageIndex]} alt={product.name} className="w-full h-80 object-cover rounded-lg" />
-            <div className="absolute top-4 left-4 bg-black/50 text-white font-bold px-4 py-2 rounded-full">
+          <div className="relative rounded-2xl overflow-hidden shadow-sm bg-white aspect-square">
+            <img 
+              src={product.gallery[activeImageIndex]} 
+              alt={product.name} 
+              className="w-full h-full object-cover" 
+            />
+            <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-sm text-white font-bold px-4 py-2 rounded-full text-sm">
               ₦{product.price.toLocaleString()}
             </div>
-            <div className="absolute top-4 right-4 bg-white/50 p-2 rounded-full">
-              <FiHeart size={24} className="text-white" />
+            <div className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md">
+              <FiHeart size={20} className="text-gray-400" />
             </div>
           </div>
-          <div className="flex justify-center space-x-2 p-4">
+
+          <div className="flex justify-center gap-3 mt-4 overflow-x-auto pb-2">
             {product.gallery.map((imgSrc, index) => (
-              <button key={index} onClick={() => setActiveImageIndex(index)}>
+              <button 
+                key={index} 
+                onClick={() => setActiveImageIndex(index)}
+                className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                  index === activeImageIndex ? 'border-green-600 scale-105 opacity-100' : 'border-transparent opacity-60'
+                }`}
+              >
                 <img 
                   src={imgSrc} 
-                  alt={`${product.name} thumbnail ${index + 1}`}
-                  className={`w-16 h-16 object-cover rounded-lg border-2 transition ${
-                    index === activeImageIndex ? 'border-green-500' : 'border-transparent opacity-70'
-                  }`} 
+                  alt={`thumbnail-${index}`}
+                  className="w-full h-full object-cover" 
                 />
               </button>
             ))}
@@ -137,40 +134,52 @@ function FarmerProductDetailPage() {
         </div>
 
         {/* Right Column (Details & Actions) */}
-        <div className="px-4 md:px-0">
+        <div className="px-2 md:px-0 mt-6 md:mt-0">
           <div className="flex justify-between items-start">
             <div>
-              <h2 className="text-2xl font-bold">{product.name}</h2>
-              <p className="text-sm text-gray-500">PO No: {product.poNumber}</p>
-              <div className="flex items-center text-gray-600 mt-2">
-                <FiMapPin className="mr-2" />
+              <h2 className="text-3xl font-bold text-gray-800">{product.name}</h2>
+              <p className="text-sm text-gray-500 font-medium mt-1">PO No: {product.poNumber}</p>
+              <div className="flex items-center text-gray-600 mt-3 text-sm">
+                <FiMapPin className="mr-2 text-green-600" />
                 <span>{product.location}</span>
               </div>
             </div>
-            <div className="flex items-center text-yellow-500 mt-1">
-              <FaStar />
+            <div className="flex items-center bg-yellow-50 px-3 py-1 rounded-full border border-yellow-100">
+              <FaStar className="text-yellow-400 text-sm" />
               <span className="ml-1 font-bold text-gray-700">{product.rating}</span>
             </div>
           </div>
           
-          <div className="py-4 border-b mt-4">
-            <h3 className="font-bold mb-1">Description</h3>
-            <p className="text-gray-600 text-sm">{product.description}</p>
+          <div className="py-6 border-b border-gray-100">
+            <h3 className="font-bold text-gray-800 mb-2">Description</h3>
+            <p className="text-gray-600 text-sm leading-relaxed">{product.description}</p>
           </div>
 
-          <div className="py-4 border-b">
-            <h3 className="font-bold mb-2">Benefits</h3>
-            <ul className="list-disc list-inside space-y-1 text-gray-600 text-sm">
-              {product.benefits.map((benefit, index) => <li key={index}>{benefit}</li>)}
+          <div className="py-6 border-b border-gray-100">
+            <h3 className="font-bold text-gray-800 mb-2">Key Benefits</h3>
+            <ul className="space-y-2 text-gray-600 text-sm">
+              {product.benefits.map((benefit, index) => (
+                <li key={index} className="flex items-start">
+                  <span className="mr-2 mt-1.5 w-1.5 h-1.5 bg-green-500 rounded-full flex-shrink-0"></span>
+                  {benefit}
+                </li>
+              ))}
             </ul>
           </div>
           
-          <div className="mt-6 flex items-center space-x-4">
-            <button className="flex-1 flex items-center justify-center border-2 border-blue-500 text-blue-500 font-bold py-3 rounded-full hover:bg-blue-50 transition">
-              <FiEdit className="mr-2" /> Edit
+          {/* Action Buttons - Size Reduced */}
+          <div className="mt-8 flex items-center gap-4">
+            <button 
+              className="flex-1 flex items-center justify-center gap-2 border border-blue-600 text-blue-600 font-bold py-2.5 text-sm rounded-xl hover:bg-blue-50 transition"
+              onClick={() => alert("Edit functionality coming soon!")}
+            >
+              <FiEdit size={16} /> Edit Product
             </button>
-            <button className="flex-1 flex items-center justify-center border-2 border-red-500 text-red-500 font-bold py-3 rounded-full hover:bg-red-50 transition">
-              <FiTrash2 className="mr-2" /> Delete
+            <button 
+              className="flex-1 flex items-center justify-center gap-2 border border-red-500 text-red-500 font-bold py-2.5 text-sm rounded-xl hover:bg-red-50 transition"
+              onClick={() => alert("Delete functionality coming soon!")}
+            >
+              <FiTrash2 size={16} /> Delete
             </button>
           </div>
         </div>
